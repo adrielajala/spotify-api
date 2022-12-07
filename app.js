@@ -44,11 +44,35 @@ app.use(express.static(path.join(__dirname, '/js')));
 
 
 router.get('/', (req, res, next) => {
-    res.sendFile(path.join(__dirname + '/index.html'));
+    if (spotifyApi.getAccessToken()) {
+        let me = {};
+
+        spotifyApi.getMe().then(data => {
+            me = {
+                username: data.body.display_name,
+                email: data.body.email,
+                profile_image: data.body.images[0].url,
+                member: data.body.product
+            }
+
+            res.render('index.html', {
+                username: me.username,
+                profile_image: data.body.images[0].url
+            });
+        });
+    } else {
+        res.sendFile(path.join(__dirname + '/index.html'));
+    }
+
 });
 
 router.get('/login', (req, res, next) => {
     res.redirect(spotifyApi.createAuthorizeURL(scopes));
+});
+
+router.get('/exit', (req, res, next) => {
+    spotifyApi.resetAccessToken();
+    res.redirect('/');
 });
 
 router.get('/callback', (req, res, next) => {
@@ -80,6 +104,7 @@ router.get('/callback', (req, res, next) => {
             const data = await spotifyApi.refreshAccessToken();
             const access_token = data.body['access_token'];
             spotifyApi.setAccessToken(access_token);
+            
         
             console.log('The access token has been refreshed!');
             console.log('access_token:', token);
@@ -98,7 +123,7 @@ router.get('/search', (req, res, next) => {
         res.redirect('/');
     }
 
-    let me = {};
+    /* let me = {};
 
     spotifyApi.getMe().then(data => {
         me = {
@@ -108,7 +133,7 @@ router.get('/search', (req, res, next) => {
             profile_image: data.body.images[0].url,
             member: data.body.product
         }
-    });
+    }); */
 
     spotifyApi.searchTracks(song, { limit: 1 }).then(data => {
         let trackId = data.body.tracks.items[0].id;

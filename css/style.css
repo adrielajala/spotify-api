@@ -62,20 +62,24 @@ h1 {
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
 }
 
-footer {
+#user {
+    margin-top: 2em;
     text-align: center;
-    font-family: 'Patua One', cursive;
-    font-size: 25px;
-    position: absolute;
-    bottom:0;
-    width:100%;
-    height:60px;   /* Height of the footer */
-    background: #1ca84d;
 }
 
-footer p {
-    padding: 15px 0;
-    color: #fff;
+#user img {
+    width: 10em;
+    height: auto;
+    border-radius: 500px;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+#user p {
+    margin-top: 1em;
+    text-align: center;
+    color: white;
+    font-family: 'Patua One', cursive;
+    font-size: 20px;
 }
 
 @media only screen and (max-width: 1000px) {
